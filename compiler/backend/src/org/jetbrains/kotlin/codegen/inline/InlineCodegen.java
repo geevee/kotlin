@@ -415,7 +415,7 @@ public class InlineCodegen extends CallGenerator {
         }
 
         @Override
-        protected void generateKotlinAnnotation() {
+        protected void generateKotlinMetadataAnnotation() {
             throw new IllegalStateException();
         }
 
