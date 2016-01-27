@@ -133,10 +133,7 @@ public final class ArrayFIF extends CompositeFIF {
         add(pattern(BOOLEAN_ARRAY, "<init>(Int)"), new KotlinFunctionIntrinsic("booleanArrayOfSize"));
         add(pattern(LONG_ARRAY, "<init>(Int)"), new KotlinFunctionIntrinsic("longArrayOfSize"));
 
-        KotlinFunctionIntrinsic arrayFromFun = new KotlinFunctionIntrinsic("arrayFromFun");
-        for (NamePredicate array : Arrays.asList(ARRAY, NUMBER_ARRAY, CHAR_ARRAY, BOOLEAN_ARRAY, LONG_ARRAY)) {
-            add(pattern(array, "<init>(Int,Function1)"), arrayFromFun);
-        }
+        add(pattern(ARRAYS, "<init>(Int,Function1)"), new KotlinFunctionIntrinsic("arrayFromFun"));
 
         add(ARRAY_FACTORY_METHODS, ARRAY_INTRINSIC);
     }
