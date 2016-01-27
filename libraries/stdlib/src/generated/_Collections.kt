@@ -16,7 +16,7 @@ import java.util.Collections // TODO: it's temporary while we have java.util.Col
 /**
  * Returns 1st *element* from the collection.
  */
-@Suppress("NOTHING_TO_INLINE")
+@kotlin.internal.InlineOnly
 public inline operator fun <T> List<T>.component1(): T {
     return get(0)
 }
@@ -24,7 +24,7 @@ public inline operator fun <T> List<T>.component1(): T {
 /**
  * Returns 2nd *element* from the collection.
  */
-@Suppress("NOTHING_TO_INLINE")
+@kotlin.internal.InlineOnly
 public inline operator fun <T> List<T>.component2(): T {
     return get(1)
 }
@@ -32,7 +32,7 @@ public inline operator fun <T> List<T>.component2(): T {
 /**
  * Returns 3rd *element* from the collection.
  */
-@Suppress("NOTHING_TO_INLINE")
+@kotlin.internal.InlineOnly
 public inline operator fun <T> List<T>.component3(): T {
     return get(2)
 }
@@ -40,7 +40,7 @@ public inline operator fun <T> List<T>.component3(): T {
 /**
  * Returns 4th *element* from the collection.
  */
-@Suppress("NOTHING_TO_INLINE")
+@kotlin.internal.InlineOnly
 public inline operator fun <T> List<T>.component4(): T {
     return get(3)
 }
@@ -48,7 +48,7 @@ public inline operator fun <T> List<T>.component4(): T {
 /**
  * Returns 5th *element* from the collection.
  */
-@Suppress("NOTHING_TO_INLINE")
+@kotlin.internal.InlineOnly
 public inline operator fun <T> List<T>.component5(): T {
     return get(4)
 }

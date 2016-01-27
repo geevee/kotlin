@@ -741,7 +741,7 @@ fun elements(): List<GenericFunction> {
         f("component$n()") {
             operator(true)
             inline(true)
-            annotations("""@Suppress("NOTHING_TO_INLINE")""")
+            annotations("""@kotlin.internal.InlineOnly""")
             fun getOrdinal(n: Int) = n.toString() + when (n) {
                 1 -> "st"
                 2 -> "nd"
