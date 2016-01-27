@@ -170,14 +170,9 @@ public fun <K, V> Map.Entry<K, V>.toPair(): Pair<K, V> = Pair(key, value)
  *
  * @sample test.collections.MapTest.getOrElse
  */
-public inline fun <K, V> Map<K, V>.getOrElse(key: K, defaultValue: () -> V): V {
-    val value = get(key)
-    if (value == null) {
-        return defaultValue()
-    } else {
-        return value
-    }
-}
+@kotlin.internal.InlineOnly
+public inline fun <K, V> Map<K, V>.getOrElse(key: K, defaultValue: () -> V): V = get(key) ?: defaultValue()
+
 
 internal inline fun <K, V> Map<K, V>.getOrElseNullable(key: K, defaultValue: () -> V): V {
     val value = get(key)
