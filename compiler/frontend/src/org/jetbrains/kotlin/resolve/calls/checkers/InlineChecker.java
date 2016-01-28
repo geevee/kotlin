@@ -25,7 +25,9 @@ import org.jetbrains.kotlin.diagnostics.Errors;
 import org.jetbrains.kotlin.lexer.KtToken;
 import org.jetbrains.kotlin.lexer.KtTokens;
 import org.jetbrains.kotlin.psi.*;
+import org.jetbrains.kotlin.resolve.BindingContext;
 import org.jetbrains.kotlin.resolve.DescriptorUtils;
+import org.jetbrains.kotlin.resolve.calls.CallTransformer;
 import org.jetbrains.kotlin.resolve.calls.callUtil.CallUtilKt;
 import org.jetbrains.kotlin.resolve.calls.context.BasicCallResolutionContext;
 import org.jetbrains.kotlin.resolve.calls.model.DefaultValueArgument;
@@ -44,6 +46,7 @@ import java.util.Map;
 import java.util.Set;
 
 import static org.jetbrains.kotlin.diagnostics.Errors.NON_LOCAL_RETURN_NOT_ALLOWED;
+import static org.jetbrains.kotlin.diagnostics.Errors.NON_LOCAL_RETURN_NOT_ALLOWED_RECEIVER_PARAMETER;
 import static org.jetbrains.kotlin.diagnostics.Errors.USAGE_IS_NOT_INLINABLE;
 import static org.jetbrains.kotlin.resolve.inline.InlineUtil.allowsNonLocalReturns;
 import static org.jetbrains.kotlin.resolve.inline.InlineUtil.checkNonLocalReturnUsage;
@@ -190,7 +193,7 @@ class InlineChecker implements CallChecker {
     }
 
     @Nullable
-    private static CallableDescriptor getCalleeDescriptor(
+    private CallableDescriptor getCalleeDescriptor(
             @NotNull BasicCallResolutionContext context,
             @NotNull KtExpression expression,
             boolean unwrapVariableAsFunction
@@ -198,8 +201,23 @@ class InlineChecker implements CallChecker {
         if (!(expression instanceof KtSimpleNameExpression || expression instanceof KtThisExpression)) return null;
 
         ResolvedCall<?> thisCall = CallUtilKt.getResolvedCall(expression, context.trace.getBindingContext());
-        if (unwrapVariableAsFunction && thisCall instanceof VariableAsFunctionResolvedCall) {
-            return ((VariableAsFunctionResolvedCall) thisCall).getVariableCall().getResultingDescriptor();
+        if (unwrapVariableAsFunction && thisCall != null) {
+            if (thisCall instanceof VariableAsFunctionResolvedCall) {
+                return ((VariableAsFunctionResolvedCall) thisCall).getVariableCall().getResultingDescriptor();
+            }
+
+            if (thisCall.getCall() instanceof CallTransformer.CallForImplicitInvoke) {
+                CallTransformer.CallForImplicitInvoke call = (CallTransformer.CallForImplicitInvoke) thisCall.getCall();
+                if (call.getDispatchReceiver().getExpression() instanceof KtThisExpression) {
+                    DeclarationDescriptor referencedDescriptor = context.trace.getBindingContext().get(BindingContext.REFERENCE_TARGET,
+                                                                                             ((KtThisExpression) call.getDispatchReceiver()
+                                                                                                     .getExpression())
+                                                                                                     .getInstanceReference());
+                    if (referencedDescriptor == descriptor) {
+                        return descriptor.getExtensionReceiverParameter();
+                    }
+                }
+            }
         }
         return thisCall != null ? thisCall.getResultingDescriptor() : null;
     }
@@ -273,7 +291,12 @@ class InlineChecker implements CallChecker {
         if (!allowsNonLocalReturns(inlinableParameterDescriptor)) return;
 
         if (!checkNonLocalReturnUsage(descriptor, parameterUsage, context.trace)) {
-            context.trace.report(NON_LOCAL_RETURN_NOT_ALLOWED.on(parameterUsage, parameterUsage));
+            if (inlinableParameterDescriptor instanceof ReceiverParameterDescriptor) {
+                context.trace.report(NON_LOCAL_RETURN_NOT_ALLOWED_RECEIVER_PARAMETER.on(parameterUsage));
+            }
+            else {
+                context.trace.report(NON_LOCAL_RETURN_NOT_ALLOWED.on(parameterUsage, parameterUsage));
+            }
         }
     }
 }

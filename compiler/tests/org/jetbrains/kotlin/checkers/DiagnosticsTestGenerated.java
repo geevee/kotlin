@@ -9353,6 +9353,12 @@ public class DiagnosticsTestGenerated extends AbstractDiagnosticsTest {
                     doTest(fileName);
                 }
 
+                @TestMetadata("nonLocalReturnExtensionReceiver.kt")
+                public void testNonLocalReturnExtensionReceiver() throws Exception {
+                    String fileName = KotlinTestUtils.navigationMetadata("compiler/testData/diagnostics/tests/inline/nonLocalReturns/nonLocalReturnExtensionReceiver.kt");
+                    doTest(fileName);
+                }
+
                 @TestMetadata("onlyLocalReturnLambda.kt")
                 public void testOnlyLocalReturnLambda() throws Exception {
                     String fileName = KotlinTestUtils.navigationMetadata("compiler/testData/diagnostics/tests/inline/nonLocalReturns/onlyLocalReturnLambda.kt");

@@ -1,0 +1,15 @@
+package
+
+public inline fun </*0*/ A, /*1*/ T> ((A) -> T).foo1(/*0*/ arg: A): () -> T
+public inline fun </*0*/ A, /*1*/ T> ((A) -> T).foo2(/*0*/ arg: A): () -> T
+public inline fun </*0*/ A, /*1*/ T> ((A) -> T).foo3(/*0*/ arg: A): () -> T
+public inline fun </*0*/ A, /*1*/ T> ((A) -> T).foo4(/*0*/ arg: A): () -> T
+public inline fun </*0*/ A, /*1*/ T> ((A) -> T).foo5(/*0*/ arg: A): () -> T
+
+public final class B</*0*/ E, /*1*/ F> {
+    public constructor B</*0*/ E, /*1*/ F>()
+    public open override /*1*/ /*fake_override*/ fun equals(/*0*/ other: kotlin.Any?): kotlin.Boolean
+    public open override /*1*/ /*fake_override*/ fun hashCode(): kotlin.Int
+    public final operator fun invoke(/*0*/ x: E): F
+    public open override /*1*/ /*fake_override*/ fun toString(): kotlin.String
+}
